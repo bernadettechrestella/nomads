@@ -68,7 +68,11 @@ class TravelPackagesController extends Controller
      */
     public function edit($id)
     {
-        //
+        $item = TravelPackages::findOrFail($id);
+
+        return view('pages.admin.travel-packages.edit', [
+            'item' => $item
+        ]);
     }
 
     /**
@@ -78,9 +82,15 @@ class TravelPackagesController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(TravelPackagesRequest $request, $id)
     {
-        //
+        $data = $request->all();
+        $data['slug'] = Str::slug($request->title);
+
+        $item = TravelPackages::findOrFail($id);
+        $item->update($data);
+
+        return redirect()->route('travel-packages.index');
     }
 
     /**
@@ -91,6 +101,9 @@ class TravelPackagesController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $item = TravelPackages::findOrFail($id);
+        $item->delete();
+
+        return redirect()->route('travel-packages.index');
     }
 }
