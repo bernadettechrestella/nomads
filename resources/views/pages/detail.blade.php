@@ -24,41 +24,33 @@
             <div class="row">
                 <div class="col-lg-8 pl-lg-0">
                     <div class="card card-details">
-                        <h1>Nusa Penida</h1>
+                        <h1>{{ $item->title }}</h1>
                         <p>
-                            Republic of Indonesia Raya
+                            {{ $item->location }}
                         </p>
+                        @if($item->galleries->count() > 0)
                         <div class="gallery">
                             <div class="xzoom-container">
-                                <img src="frontend/images/nusaPenida.svg" class="xzoom" id="xzoom-default" xoriginal="frontend/images/nusaPenida.svg">
+                                <img src="{{ Storage::url($item->galleries->first()->image) }}" class="xzoom" id="xzoom-default" xoriginal="{{ Storage::url($item->galleries->first()->image) }}">
                             </div>
                             <div class="xzoom-thumbs">
-                                <a href="frontend/images/nusaPenida.svg">
-                                    <img src="frontend/images/nusaPenida.svg" class="xzoom-gallery" width="128" xpreview="frontend/images/nusaPenida.svg">
+                                @foreach ($item->galleries as $gallery)
+                                <a href="{{ Storage::url($gallery->image) }}">
+                                    <img src="{{ Storage::url($gallery->image) }}" class="xzoom-gallery" width="128" xpreview="{{ Storage::url($gallery->image) }}">
                                 </a>
-                                <a href="frontend/images/nusaPenida-2.svg">
-                                    <img src="frontend/images/nusaPenida-2.svg" class="xzoom-gallery" width="128" xpreview="frontend/images/nusaPenida-2.svg">
-                                </a>
-                                <a href="frontend/images/nusaPenida.svg">
-                                    <img src="frontend/images/nusaPenida.svg" class="xzoom-gallery" width="128" xpreview="frontend/images/nusaPenida.svg">
-                                </a>
-                                <a href="frontend/images/nusaPenida-2.svg">
-                                    <img src="frontend/images/nusaPenida-2.svg" class="xzoom-gallery" width="128" xpreview="frontend/images/nusaPenida-2.svg">
-                                </a>
-                                <a href="frontend/images/nusaPenida.svg">
-                                    <img src="frontend/images/nusaPenida.svg" class="xzoom-gallery" width="128" xpreview="frontend/images/nusaPenida.svg">
-                                </a>
+                                @endforeach
                             </div>
                         </div>
+                        @endif
                         <h2>Tentang Wisata</h2>
-                        <p>Nusa Penida is an island southeast of Indonesia's island Bali and a district of Klungkung Regency that includes the neighbouring small island of Nusa Lembongan. The Badung Strait separates the island and Bali. The interior of Nusa Penida is hilly with a maximum altitude of 524 metres.</p>
+                        <p>{!! $item->about !!}</p>
                         <div class="features row">
                             <div class="col md-4">
                                 <div class="row">
                                     <i class="fa-regular fa-ticket mt-2"></i>
                                     <div class="description">
                                         <h3>Featured Event</h3>
-                                        <p>Tari Kecak</p>
+                                        <p>{{ $item->featured_event }}</p>
                                     </div>
                                 </div>
                             </div>
@@ -67,7 +59,7 @@
                                     <i class="fa-regular fa-language ml-2 mt-2"></i>
                                     <div class="description">
                                         <h3>Language</h3>
-                                        <p>Bahasa Indonesia</p>
+                                        <p>{{ $item->language }}</p>
                                     </div>
                                 </div>
                             </div>
@@ -76,7 +68,7 @@
                                     <i class="fa-regular fa-language ml-2 mt-2"></i>
                                     <div class="description">
                                         <h3>Foods</h3>
-                                        <p>Local Foods</p>
+                                        <p>{{ $item->foods }}</p>
                                     </div>
                                 </div>
                             </div>
@@ -100,33 +92,43 @@
                             <tr>
                                 <th width="50%">Date of Departure</th>
                                 <td width="50%" class="text-right">
-                                    22 Aug, 2019
+                                    {{ \Carbon\Carbon::create($item->date_of_departure)->format('F n, Y') }}
                                 </td>
                             </tr>
                             <tr>
                                 <th width="50%">Duration</th>
                                 <td width="50%" class="text-right">
-                                    4D 3N
+                                    {{ $item->duration }}
                                 </td>
                             </tr>
                             <tr>
                                 <th width="50%">Type</th>
                                 <td width="50%" class="text-right">
-                                    Open Trip
+                                    {{ $item->type }}
                                 </td>
                             </tr>
                             <tr>
                                 <th width="50%">Price</th>
                                 <td width="50%" class="text-right">
-                                    $80,00/person
+                                    ${{ $item->price }},00/person
                                 </td>
                             </tr>
                         </table>
                     </div>
                     <div class="join-container">
-                        <a href="{{ url('/checkout') }}" class="btn btn-block btn-join-now mt-3 py-2">
-                            Join Now
+                        @auth
+                        <form action="{{ route('checkout_process', $item->id) }}" method="POST">
+                            @csrf
+                            <button class="btn btn-block btn-join-now mt-3 py-2" type="submit">
+                                Join Now
+                            </button>
+                        </form>
+                        @endauth
+                        @guest
+                        <a href="{{ route('login') }}" class="btn btn-block btn-join-now mt-3 py-2">
+                            Login or Register to Join
                         </a>
+                        @endguest
                     </div>
                 </div>
             </div>

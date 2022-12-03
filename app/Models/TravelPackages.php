@@ -25,4 +25,9 @@ class TravelPackages extends Model
     ];
 
     protected $hidden = [];
+
+    public function galleries()
+    {
+        return $this->hasMany(Galleries::class, 'travel_packages_id', 'id');
+    }
 }

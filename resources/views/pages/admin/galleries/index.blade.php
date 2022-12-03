@@ -6,8 +6,8 @@
 
     <!-- Page Heading -->
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
-        <h1 class="h3 mb-0 text-gray-800">Paket Travel</h1>
-        <a href="{{ route('travel-packages.create') }}" class="btn btn-primary">
+        <h1 class="h3 mb-0 text-gray-800">Gallery</h1>
+        <a href="{{ route('galleries.create') }}" class="btn btn-primary">
             <i class="fas fa-plus text-white"> Tambah</i>
         </a>
     </div>
@@ -19,11 +19,8 @@
                     <thead>
                         <tr>
                             <td>ID</td>
-                            <td>Title</td>
-                            <td>Location</td>
-                            <td>Type</td>
-                            <td>Departure Date</td>
-                            <td>Type</td>
+                            <td>Travel</td>
+                            <td>Gambar</td>
                             <td>Action</td>
                         </tr>
                     </thead>
@@ -31,16 +28,15 @@
                         @forelse ($items as $item)
                         <tr>
                             <td>{{ $item->id }}</td>
-                            <td>{{ $item->title }}</td>
-                            <td>{{ $item->location }}</td>
-                            <td>{{ $item->type }}</td>
-                            <td>{{ $item->departure_date }}</td>
-                            <td>{{ $item->type }}</td>
+                            <td>{{ $item->travel_packages->title }}</td>
                             <td>
-                                <a href="{{ route('travel-packages.edit', $item->id) }}" class="btn">
+                                <img src="{{ Storage::url($item->image) }}" alt="" style="width: 150px" class="img-thumbnail" />
+                            </td>
+                            <td>
+                                <a href="{{ route('galleries.edit', $item->id) }}" class="btn">
                                     <i class="fa fa-pencil-alt" style="color:blue;"></i>
                                 </a>
-                                <form action="{{ route('travel-packages.destroy', $item->id) }}" method="POST" class="d-inline">
+                                <form action="{{ route('galleries.destroy', $item->id) }}" method="POST" class="d-inline">
                                     @csrf
                                     @method('delete')
                                     <button class="btn">
